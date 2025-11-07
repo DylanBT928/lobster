@@ -6,22 +6,12 @@
 #include "Trade.hpp"
 #include "types.hpp"
 
-#include <condition_variable>
 #include <map>
-#include <mutex>
-#include <thread>
 #include <unordered_map>
 
 class Orderbook
 {
    public:
-    Orderbook();
-    Orderbook(const Orderbook&) = delete;
-    void operator=(const Orderbook&) = delete;
-    Orderbook(Orderbook&&) = delete;
-    void operator=(Orderbook&&) = delete;
-    ~Orderbook();
-
     Trades AddOrder(OrderPointer order);
     void CancelOrder(OrderID orderID);
     Trades ModifyOrder(OrderModify order);
@@ -49,25 +39,10 @@ class Orderbook
         };
     };
 
-    std::unordered_map<Price, LevelData> data_;
     std::map<Price, OrderPointers, std::greater<Price>> bids_;
     std::map<Price, OrderPointers, std::less<Price>> asks_;
     std::unordered_map<OrderID, OrderEntry> orders_;
-    mutable std::mutex ordersMutex_;
-    std::thread ordersPruneThread_;
-    std::condition_variable shutdownConditionVariable_;
 
-    void PruneGoodForDayOrders();
-
-    void CancelOrders(OrderIDs orderIDs);
-    void CancelOrderInternal(OrderID orderID);
-
-    void OnOrderCancelled(OrderPointer order);
-    void OnOrderAdded(OrderPointer order);
-    void OnOrderMatched(Price price, Quantity quantity, bool isFullyFilled);
-    void UpdateLevelData(Price price, Quantity quantity, LevelData::Action action);
-
-    bool CanFullyFill(Side side, Price price, Quantity quantity) const;
     bool CanMatch(Side side, Price price) const;
-    Trades MatchOrders();
+    Trades MatchOrder();
 };
