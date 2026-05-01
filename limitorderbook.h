@@ -1,6 +1,7 @@
 #ifndef LIMITORDERBOOK_H
 #define LIMITORDERBOOK_H
 
+#include <cstdint>
 #include <vector>
 
 enum class Side
@@ -11,9 +12,9 @@ enum class Side
 
 struct Order
 {
-    Order(int oid, int p, Side s);
-    int orderID;
-    int price;
+    Order(uint16_t oid, uint64_t p, Side s);
+    uint16_t orderID;
+    uint64_t price;
     Side side;
 };
 
@@ -21,7 +22,7 @@ class LimitOrderBook
 {
    public:
     void placeOrder(Order o);
-    void cancelOrder(int oid);
+    void cancelOrder(uint16_t oid);
     void print();
 
    private:

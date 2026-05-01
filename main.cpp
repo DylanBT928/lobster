@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <random>
 
 #include "limitorderbook.h"
@@ -11,9 +12,10 @@ int main()
     std::random_device rd;
     std::mt19937 gen(rd());
 
+    std::uniform_int_distribution<uint64_t> price(100, 9999999999);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
-    for (int i{ 1 }; i <= 20; ++i)
+    for (std::uint16_t oid{ 1 }; oid <= 20; ++oid)
     {
         Side side;
 
@@ -26,7 +28,7 @@ int main()
             side = Side::SELL;
         }
 
-        Order o{ i, 1005000, side };
+        Order o{ oid, price(gen), side };
         lobster.placeOrder(o);
     }
 
