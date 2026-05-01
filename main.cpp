@@ -10,13 +10,14 @@ int main()
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(0, 1);
 
-    for (int i{ 1 }; i <= 10; ++i)
+    std::uniform_int_distribution<> buyOrSell(0, 1);
+
+    for (int i{ 1 }; i <= 20; ++i)
     {
         Side side;
 
-        if (distrib(gen) == 0)
+        if (buyOrSell(gen) == 0)
         {
             side = Side::BUY;
         }
@@ -29,7 +30,7 @@ int main()
         lobster.placeOrder(o);
     }
 
-    lobster.cancelOrder(6);
+    lobster.cancelOrder(13);
 
     // ----------- end testing -----------
 

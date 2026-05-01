@@ -9,11 +9,9 @@ enum class Side
     SELL
 };
 
-class Order
+struct Order
 {
-   public:
     Order(int oid, int p, Side s);
-
     int orderID;
     int price;
     Side side;
@@ -27,7 +25,8 @@ class LimitOrderBook
     void print();
 
    private:
-    std::vector<Order> orders;
+    std::vector<Order> bidSide;
+    std::vector<Order> askSide;
 };
 
 #endif

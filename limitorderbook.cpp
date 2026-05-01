@@ -1,5 +1,6 @@
 #include "limitorderbook.h"
 
+#include <algorithm>
 #include <cstddef>
 #include <iomanip>
 #include <iostream>
@@ -13,16 +14,32 @@ Order::Order(int oid, int p, Side s)
 
 void LimitOrderBook::placeOrder(Order o)
 {
-    orders.push_back(o);
+    if (o.side == Side::BUY)
+    {
+        bidSide.push_back(o);
+    }
+    else
+    {
+        askSide.push_back(o);
+    }
 }
 
 void LimitOrderBook::cancelOrder(int oid)
 {
-    for (std::size_t i{ 0 }; i < orders.size(); ++i)
+    for (std::size_t i{ 0 }; i < bidSide.size(); ++i)
     {
-        if (orders[i].orderID == oid)
+        if (bidSide[i].orderID == oid)
         {
-            orders.erase(orders.begin() + i);
+            bidSide.erase(bidSide.begin() + i);
+            break;
+        }
+    }
+
+    for (std::size_t i{ 0 }; i < askSide.size(); ++i)
+    {
+        if (askSide[i].orderID == oid)
+        {
+            askSide.erase(askSide.begin() + i);
             break;
         }
     }
@@ -30,22 +47,38 @@ void LimitOrderBook::cancelOrder(int oid)
 
 void LimitOrderBook::print()
 {
-    std::cout << " lobster - limit order book " << std::endl;
-    std::cout << "----------------------------" << std::endl;
+    std::size_t len = std::max(bidSide.size(), askSide.size());
 
-    for (const Order& o : orders)
+    std::cout << "-------------------------------------" << std::endl;
+
+    for (std::size_t i{ 0 }; i < len; ++i)
     {
-        std::cout << o.orderID << '\t';
-        std::cout << std::fixed << std::setprecision(4)
-                  << o.price / 10000.0 << '\t';
-
-        if (o.side == Side::BUY)
+        if (i < bidSide.size())
         {
-            std::cout << "\033[32mBUY\033[0m\n";
+            std::cout << std::left << std::setw(4)
+                      << bidSide[i].orderID;
+            std::cout << std::fixed << std::setprecision(4) << std::setw(10)
+                      << bidSide[i].price / 100000.0;
+            std::cout << "\033[32mBID\033[0m";
         }
         else
         {
-            std::cout << "\033[31mSELL\033[0m\n";
+            std::cout << std::setw(17) << ' ';
         }
+
+        std::cout << " | ";
+
+        if (i < askSide.size())
+        {
+            std::cout << std::left << std::setw(4)
+                      << askSide[i].orderID;
+            std::cout << std::fixed << std::setprecision(4) << std::setw(10)
+                      << askSide[i].price / 100000.0;
+            std::cout << "\033[31mASK\033[0m";
+        }
+
+        std::cout << '\n';
     }
+
+    std::cout << "-------------------------------------" << std::endl;
 }
