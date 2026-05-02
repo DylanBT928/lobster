@@ -16,7 +16,7 @@ int main()
     std::uniform_int_distribution<std::uint64_t> price(spy * 0.9, spy * 1.1 + 1);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
-    for (std::uint32_t oid{ 1 }; oid < 200000; ++oid)
+    for (std::uint32_t oid{ 1 }; oid <= 200000; ++oid)
     {
         Side side;
 
@@ -37,5 +37,5 @@ int main()
 
     // ----------- end testing -----------
 
-    lobster.print();
+    lobster.display();
 }

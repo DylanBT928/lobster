@@ -51,7 +51,7 @@ void LimitOrderBook::executeTrade()
     // TODO
 }
 
-void LimitOrderBook::print()
+void LimitOrderBook::display()
 {
     std::size_t len = std::max(bidSide.size(), askSide.size());
 

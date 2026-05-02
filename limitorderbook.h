@@ -24,7 +24,7 @@ class LimitOrderBook
     void placeOrder(Order o);
     void cancelOrder(uint32_t oid);
     void executeTrade();
-    void print();
+    void display();
 
    private:
     std::vector<Order> bidSide;
