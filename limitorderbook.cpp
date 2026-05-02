@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <iostream>
 
-Order::Order(uint16_t oid, uint64_t p, Side s)
+Order::Order(uint32_t oid, uint64_t p, Side s)
 {
     orderID = oid;
     price = p;
@@ -25,7 +25,7 @@ void LimitOrderBook::placeOrder(Order o)
     }
 }
 
-void LimitOrderBook::cancelOrder(uint16_t oid)
+void LimitOrderBook::cancelOrder(uint32_t oid)
 {
     for (std::size_t i{ 0 }; i < bidSide.size(); ++i)
     {
@@ -46,6 +46,11 @@ void LimitOrderBook::cancelOrder(uint16_t oid)
     }
 }
 
+void LimitOrderBook::executeTrade()
+{
+    // TODO
+}
+
 void LimitOrderBook::print()
 {
     std::size_t len = std::max(bidSide.size(), askSide.size());
@@ -56,7 +61,7 @@ void LimitOrderBook::print()
     {
         if (i < bidSide.size())
         {
-            std::cout << std::left << std::setw(8)
+            std::cout << std::left << std::setw(10)
                       << bidSide[i].orderID;
             std::cout << std::right << std::fixed << std::setprecision(4)
                       << std::setw(12) << bidSide[i].price / 100000.0;
@@ -64,14 +69,14 @@ void LimitOrderBook::print()
         }
         else
         {
-            std::cout << std::setw(27) << ' ';
+            std::cout << std::setw(29) << ' ';
         }
 
         std::cout << "    |    ";
 
         if (i < askSide.size())
         {
-            std::cout << std::left << std::setw(8)
+            std::cout << std::left << std::setw(10)
                       << askSide[i].orderID;
             std::cout << std::right << std::fixed << std::setprecision(4)
                       << std::setw(12) << askSide[i].price / 100000.0;

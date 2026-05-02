@@ -15,7 +15,7 @@ int main()
     std::uniform_int_distribution<uint64_t> price(100, 99999999999);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
-    for (std::uint16_t oid{ 1 }; oid <= 1000; ++oid)
+    for (std::uint32_t oid{ 1 }; oid <= 200000; ++oid)
     {
         Side side;
 

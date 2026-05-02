@@ -12,8 +12,8 @@ enum class Side
 
 struct Order
 {
-    Order(uint16_t oid, uint64_t p, Side s);
-    uint16_t orderID;
+    Order(uint32_t oid, uint64_t p, Side s);
+    uint32_t orderID;
     uint64_t price;
     Side side;
 };
@@ -22,7 +22,8 @@ class LimitOrderBook
 {
    public:
     void placeOrder(Order o);
-    void cancelOrder(uint16_t oid);
+    void cancelOrder(uint32_t oid);
+    void executeTrade();
     void print();
 
    private:
