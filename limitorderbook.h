@@ -21,7 +21,10 @@ struct Order
 class LimitOrderBook
 {
    public:
-    void placeOrder(Order o);
+    LimitOrderBook();
+    ~LimitOrderBook();
+
+    void placeOrder(Order& o);
     void cancelOrder(uint32_t oid);
     void executeTrade();
     void display();
@@ -29,6 +32,8 @@ class LimitOrderBook
    private:
     std::vector<Order> bidSide;
     std::vector<Order> askSide;
+    Order* maxBid;
+    Order* minAsk;
 };
 
 #endif

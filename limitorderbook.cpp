@@ -11,15 +11,46 @@ Order::Order(uint32_t oid, uint64_t p, Side s)
 {
 }
 
-void LimitOrderBook::placeOrder(Order o)
+LimitOrderBook::LimitOrderBook()
+    : maxBid{ nullptr }, minAsk{ nullptr }
+{
+}
+
+LimitOrderBook::~LimitOrderBook()
+{
+    maxBid = nullptr;
+    minAsk = nullptr;
+}
+
+void LimitOrderBook::placeOrder(Order& o)
 {
     if (o.side == Side::BUY)
     {
         bidSide.push_back(o);
+
+        if (!maxBid)
+        {
+            maxBid = &o;
+        }
+
+        if (o.price > maxBid->price)
+        {
+            maxBid = &o;
+        }
     }
     else
     {
         askSide.push_back(o);
+
+        if (!minAsk)
+        {
+            minAsk = &o;
+        }
+
+        if (o.price < minAsk->price)
+        {
+            minAsk = &o;
+        }
     }
 }
 
@@ -85,4 +116,8 @@ void LimitOrderBook::display()
     }
 
     std::cout << "-------------------------------------------------------" << std::endl;
+
+    std::cout << '\n';
+    std::cout << "max bid: " << maxBid->price << ' ' << '\n';
+    std::cout << "min ask: " << minAsk->price << ' ' << '\n';
 }

@@ -1,5 +1,8 @@
+#include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <random>
+#include <vector>
 
 #include "limitorderbook.h"
 
@@ -16,7 +19,9 @@ int main()
     std::uniform_int_distribution<std::uint64_t> price(spy * 0.9, spy * 1.1 + 1);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
-    for (std::uint32_t oid{ 1 }; oid <= 200000; ++oid)
+    std::vector<Order> orders;
+
+    for (std::uint32_t oid{ 1 }; oid <= 20; ++oid)
     {
         Side side;
 
@@ -30,7 +35,12 @@ int main()
         }
 
         Order o{ oid, price(gen), side };
-        lobster.placeOrder(o);
+        orders.push_back(o);
+    }
+
+    for (std::size_t i{ 0 }; i < orders.size(); ++i)
+    {
+        lobster.placeOrder(orders[i]);
     }
 
     lobster.cancelOrder(13);
