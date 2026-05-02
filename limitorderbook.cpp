@@ -7,10 +7,8 @@
 #include <iostream>
 
 Order::Order(uint32_t oid, uint64_t p, Side s)
+    : orderID(oid), price{ p }, side{ s }
 {
-    orderID = oid;
-    price = p;
-    side = s;
 }
 
 void LimitOrderBook::placeOrder(Order o)
