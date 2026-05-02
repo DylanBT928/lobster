@@ -12,10 +12,11 @@ int main()
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    std::uniform_int_distribution<uint64_t> price(100, 99999999999);
+    std::uint64_t spy{ 7206500 };
+    std::uniform_int_distribution<std::uint64_t> price(spy * 0.9, spy * 1.1 + 1);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
-    for (std::uint32_t oid{ 1 }; oid <= 200000; ++oid)
+    for (std::uint32_t oid{ 1 }; oid < 200000; ++oid)
     {
         Side side;
 
