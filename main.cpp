@@ -1,7 +1,9 @@
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
 #include <random>
+#include <thread>
 #include <vector>
 
 #include "limitorderbook.h"
@@ -39,9 +41,14 @@ int main()
         orders.push_back(o);
     }
 
+    std::cout << "\033[2J\033[1;1H";
+
     for (std::size_t i{ 0 }; i < orders.size(); ++i)
     {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         lobster.placeOrder(orders[i]);
+        lobster.display();
+        std::cout << "\033[2J\033[1;1H";
     }
 
     lobster.cancelOrder(13);

@@ -56,6 +56,14 @@ void LimitOrderBook::placeOrder(Order& o)
             minAsk = &o;
         }
     }
+
+    if (maxBid && minAsk)
+    {
+        if (maxBid->price >= minAsk->price)
+        {
+            executeTrade();
+        }
+    }
 }
 
 void LimitOrderBook::cancelOrder(std::uint32_t oid)
@@ -81,13 +89,43 @@ void LimitOrderBook::cancelOrder(std::uint32_t oid)
 
 void LimitOrderBook::executeTrade()
 {
-    // TODO
+    for (std::size_t i{ 0 }; i < bidSide.size(); ++i)
+    {
+        if (bidSide[i].orderID == maxBid->orderID)
+        {
+            bidSide.erase(bidSide.begin() + i);
+            break;
+        }
+    }
+
+    for (std::size_t i{ 0 }; i < askSide.size(); ++i)
+    {
+        if (askSide[i].orderID == minAsk->orderID)
+        {
+            askSide.erase(askSide.begin() + i);
+            break;
+        }
+    }
+
+    sort(bidSide.begin(), bidSide.end(),
+         [](const Order& a, const Order& b)
+         {
+             return a.price > b.price;
+         });
+    sort(askSide.begin(), askSide.end(),
+         [](const Order& a, const Order& b)
+         {
+             return a.price < b.price;
+         });
+
+    maxBid = &bidSide[0];
+    minAsk = &askSide[0];
 }
 
 void LimitOrderBook::display()
 {
     std::size_t len = std::max(bidSide.size(), askSide.size());
-    std::size_t dashes{ 76 };
+    std::size_t dashes{ 75 };
 
     for (std::size_t i{ 0 }; i < dashes; ++i)
     {
@@ -110,7 +148,7 @@ void LimitOrderBook::display()
         }
         else
         {
-            std::cout << std::setw(23) << ' ';
+            std::cout << std::setw(33) << ' ';
         }
 
         std::cout << "    |    ";
@@ -135,7 +173,12 @@ void LimitOrderBook::display()
     }
 
     std::cout << '\n';
-    std::cout << '\n';
-    std::cout << "max bid: " << maxBid->price << ' ' << '\n';
-    std::cout << "min ask: " << minAsk->price << ' ' << '\n';
+
+    if (maxBid && minAsk)
+    {
+        std::cout << '\n';
+        std::cout << "max bid: " << maxBid->price << ' ' << '\n';
+        std::cout << "min ask: " << minAsk->price << ' ' << '\n';
+        std::cout << '\n';
+    }
 }
