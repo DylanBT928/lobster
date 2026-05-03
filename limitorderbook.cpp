@@ -6,8 +6,12 @@
 #include <iomanip>
 #include <iostream>
 
-Order::Order(uint32_t oid, uint64_t p, Side s)
-    : orderID(oid), price{ p }, side{ s }
+Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
+    : orderID(oid),
+      price{ p },
+      initialQuantity{ iq },
+      remainingQuantity{ iq },
+      side{ s }
 {
 }
 
@@ -54,7 +58,7 @@ void LimitOrderBook::placeOrder(Order& o)
     }
 }
 
-void LimitOrderBook::cancelOrder(uint32_t oid)
+void LimitOrderBook::cancelOrder(std::uint32_t oid)
 {
     for (std::size_t i{ 0 }; i < bidSide.size(); ++i)
     {
@@ -83,8 +87,14 @@ void LimitOrderBook::executeTrade()
 void LimitOrderBook::display()
 {
     std::size_t len = std::max(bidSide.size(), askSide.size());
+    std::size_t dashes{ 76 };
 
-    std::cout << "-------------------------------------------------------" << std::endl;
+    for (std::size_t i{ 0 }; i < dashes; ++i)
+    {
+        std::cout << '-';
+    }
+
+    std::cout << '\n';
 
     for (std::size_t i{ 0 }; i < len; ++i)
     {
@@ -95,6 +105,8 @@ void LimitOrderBook::display()
             std::cout << "\033[32m" << std::right << std::fixed
                       << std::setprecision(4) << std::setw(15)
                       << bidSide[i].price / 10000.0 << "\033[0m";
+            std::cout << "    " << +bidSide[i].initialQuantity
+                      << "    " << +bidSide[i].remainingQuantity;
         }
         else
         {
@@ -110,13 +122,19 @@ void LimitOrderBook::display()
             std::cout << "\033[31m" << std::right << std::fixed
                       << std::setprecision(4) << std::setw(15)
                       << askSide[i].price / 10000.0 << "\033[0m";
+            std::cout << "    " << +askSide[i].initialQuantity
+                      << "    " << +askSide[i].remainingQuantity;
         }
 
         std::cout << '\n';
     }
 
-    std::cout << "-------------------------------------------------------" << std::endl;
+    for (std::size_t i{ 0 }; i < dashes; ++i)
+    {
+        std::cout << '-';
+    }
 
+    std::cout << '\n';
     std::cout << '\n';
     std::cout << "max bid: " << maxBid->price << ' ' << '\n';
     std::cout << "min ask: " << minAsk->price << ' ' << '\n';

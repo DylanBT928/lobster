@@ -12,9 +12,11 @@ enum class Side
 
 struct Order
 {
-    Order(uint32_t oid, uint64_t p, Side s);
-    uint32_t orderID;
-    uint64_t price;
+    Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s);
+    std::uint32_t orderID;
+    std::uint64_t price;
+    std::uint8_t initialQuantity;
+    std::uint8_t remainingQuantity;
     Side side;
 };
 
@@ -25,7 +27,7 @@ class LimitOrderBook
     ~LimitOrderBook();
 
     void placeOrder(Order& o);
-    void cancelOrder(uint32_t oid);
+    void cancelOrder(std::uint32_t oid);
     void executeTrade();
     void display();
 

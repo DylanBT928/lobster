@@ -17,6 +17,7 @@ int main()
 
     std::uint64_t spy{ 7206500 };
     std::uniform_int_distribution<std::uint64_t> price(spy * 0.9, spy * 1.1 + 1);
+    std::uniform_int_distribution<std::uint8_t> quantity(1, 9);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
     std::vector<Order> orders;
@@ -34,7 +35,7 @@ int main()
             side = Side::SELL;
         }
 
-        Order o{ oid, price(gen), side };
+        Order o{ oid, price(gen), quantity(gen), side };
         orders.push_back(o);
     }
 
