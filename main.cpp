@@ -24,7 +24,7 @@ int main()
 
     std::vector<Order> orders;
 
-    for (std::uint32_t oid{ 1 }; oid <= 20; ++oid)
+    for (std::uint32_t oid{ 1 }; oid <= 500; ++oid)
     {
         Side side;
 
@@ -41,14 +41,11 @@ int main()
         orders.push_back(o);
     }
 
-    std::cout << "\033[2J\033[1;1H";
-
     for (std::size_t i{ 0 }; i < orders.size(); ++i)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         lobster.placeOrder(orders[i]);
         lobster.display();
-        std::cout << "\033[2J\033[1;1H";
     }
 
     lobster.cancelOrder(13);

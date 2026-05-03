@@ -127,6 +127,8 @@ void LimitOrderBook::display()
     std::size_t len = std::max(bidSide.size(), askSide.size());
     std::size_t dashes{ 75 };
 
+    std::cout << "\033[2J\033[1;1H";
+
     for (std::size_t i{ 0 }; i < dashes; ++i)
     {
         std::cout << '-';
