@@ -2,7 +2,9 @@
 #define LIMITORDERBOOK_H
 
 #include <cstdint>
-#include <vector>
+#include <list>
+#include <map>
+#include <unordered_map>
 
 enum class Side
 {
@@ -18,6 +20,8 @@ struct Order
     std::uint8_t initialQuantity;
     std::uint8_t remainingQuantity;
     Side side;
+    Order* prev;
+    Order* next;
 };
 
 class LimitOrderBook
@@ -32,8 +36,9 @@ class LimitOrderBook
     void display();
 
    private:
-    std::vector<Order> bidSide;
-    std::vector<Order> askSide;
+    std::unordered_map<std::uint32_t, std::list<Order>::iterator> orderIDs;
+    std::map<std::uint64_t, std::list<Order>> bids;
+    std::map<std::uint64_t, std::list<Order>, std::greater<std::uint64_t>> asks;
     Order* maxBid;
     Order* minAsk;
 };

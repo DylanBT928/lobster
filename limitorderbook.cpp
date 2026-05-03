@@ -5,13 +5,16 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 
 Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
     : orderID(oid),
       price{ p },
       initialQuantity{ iq },
       remainingQuantity{ iq },
-      side{ s }
+      side{ s },
+      prev{ nullptr },
+      next{ nullptr }
 {
 }
 
@@ -30,49 +33,48 @@ void LimitOrderBook::placeOrder(Order& o)
 {
     if (o.side == Side::BUY)
     {
-        bidSide.push_back(o);
-
-        if (!maxBid)
-        {
-            maxBid = &o;
-        }
-
-        if (o.price > maxBid->price)
-        {
-            maxBid = &o;
-        }
+        bids[o.price].push_back(o);
+        orderIDs.insert({ o.orderID, std::prev(bids[o.price].end()) });
+        maxBid = &bids.begin()->second.front();
     }
     else
     {
-        askSide.push_back(o);
-
-        if (!minAsk)
-        {
-            minAsk = &o;
-        }
-
-        if (o.price < minAsk->price)
-        {
-            minAsk = &o;
-        }
+        asks[o.price].push_back(o);
+        orderIDs.insert({ o.orderID, std::prev(asks[o.price].end()) });
+        minAsk = &asks.begin()->second.front();
     }
 
-    if (maxBid && minAsk)
+    while (maxBid && minAsk && !bids.empty() && !asks.empty())
     {
         if (maxBid->price >= minAsk->price)
         {
             executeTrade();
+
+            if (!bids.empty() && !asks.empty())
+            {
+                maxBid = &bids.begin()->second.front();
+                minAsk = &asks.begin()->second.front();
+            }
+            else
+            {
+                maxBid = nullptr;
+                minAsk = nullptr;
+            }
+        }
+        else
+        {
+            break;
         }
     }
 }
 
 void LimitOrderBook::cancelOrder(std::uint32_t oid)
 {
-    for (std::size_t i{ 0 }; i < bidSide.size(); ++i)
+    for (const Order& : o)
     {
-        if (bidSide[i].orderID == oid)
+        if (o.orderID == oid)
         {
-            bidSide.erase(bidSide.begin() + i);
+            bids.erase(bids.begin() + i);
             break;
         }
     }

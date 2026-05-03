@@ -4,7 +4,6 @@
 #include <iostream>
 #include <random>
 #include <thread>
-#include <vector>
 
 #include "limitorderbook.h"
 
@@ -22,9 +21,9 @@ int main()
     std::uniform_int_distribution<std::uint8_t> quantity(1, 9);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
-    std::vector<Order> orders;
+    std::list<Order> orders;
 
-    for (std::uint32_t oid{ 1 }; oid <= 500; ++oid)
+    for (std::uint32_t oid{ 1 }; oid <= 50; ++oid)
     {
         Side side;
 
@@ -38,17 +37,12 @@ int main()
         }
 
         Order o{ oid, price(gen), quantity(gen), side };
-        orders.push_back(o);
-    }
-
-    for (std::size_t i{ 0 }; i < orders.size(); ++i)
-    {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        lobster.placeOrder(orders[i]);
+        lobster.placeOrder(o);
         lobster.display();
     }
 
-    lobster.cancelOrder(13);
+    lobster.cancelOrder(1);
 
     // ----------- end testing -----------
 
