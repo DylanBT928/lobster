@@ -44,28 +44,28 @@ void LimitOrderBook::placeOrder(Order& o)
         minAsk = &asks.begin()->second.front();
     }
 
-    while (maxBid && minAsk && !bids.empty() && !asks.empty())
-    {
-        if (maxBid->price >= minAsk->price)
-        {
-            executeTrade();
-
-            if (!bids.empty() && !asks.empty())
-            {
-                maxBid = &bids.begin()->second.front();
-                minAsk = &asks.begin()->second.front();
-            }
-            else
-            {
-                maxBid = nullptr;
-                minAsk = nullptr;
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
+    // while (maxBid && minAsk && !bids.empty() && !asks.empty())
+    // {
+    //     if (maxBid->price >= minAsk->price)
+    //     {
+    //         executeTrade();
+    //
+    //         if (!bids.empty() && !asks.empty())
+    //         {
+    //             maxBid = &bids.begin()->second.front();
+    //             minAsk = &asks.begin()->second.front();
+    //         }
+    //         else
+    //         {
+    //             maxBid = nullptr;
+    //             minAsk = nullptr;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         break;
+    //     }
+    // }
 }
 
 void LimitOrderBook::cancelOrder(std::uint32_t oid)
@@ -126,10 +126,93 @@ void LimitOrderBook::executeTrade()
     // minAsk = &askSide[0];
 }
 
+// void LimitOrderBook::display()
+// {
+//     std::size_t len = std::max(bidSide.size(), askSide.size());
+//     std::size_t dashes{ 75 };
+//
+//     std::cout << "\033[2J\033[1;1H";
+//
+//     for (std::size_t i{ 0 }; i < dashes; ++i)
+//     {
+//         std::cout << '-';
+//     }
+//
+//     std::cout << '\n';
+//
+//     for (std::size_t i{ 0 }; i < len; ++i)
+//     {
+//         if (i < bidSide.size())
+//         {
+//             std::cout << std::left << std::setw(8)
+//                       << bidSide[i].orderID;
+//             std::cout << "\033[32m" << std::right << std::fixed
+//                       << std::setprecision(4) << std::setw(15)
+//                       << bidSide[i].price / 10000.0 << "\033[0m";
+//             std::cout << "    " << +bidSide[i].initialQuantity
+//                       << "    " << +bidSide[i].remainingQuantity;
+//         }
+//         else
+//         {
+//             std::cout << std::setw(33) << ' ';
+//         }
+//
+//         std::cout << "    |    ";
+//
+//         if (i < askSide.size())
+//         {
+//             std::cout << std::left << std::setw(8)
+//                       << askSide[i].orderID;
+//             std::cout << "\033[31m" << std::right << std::fixed
+//                       << std::setprecision(4) << std::setw(15)
+//                       << askSide[i].price / 10000.0 << "\033[0m";
+//             std::cout << "    " << +askSide[i].initialQuantity
+//                       << "    " << +askSide[i].remainingQuantity;
+//         }
+//
+//         std::cout << '\n';
+//     }
+//
+//     for (std::size_t i{ 0 }; i < dashes; ++i)
+//     {
+//         std::cout << '-';
+//     }
+//
+//     std::cout << '\n';
+//
+//     if (maxBid && minAsk)
+//     {
+//         std::cout << '\n';
+//         std::cout << "max bid: " << maxBid->price << ' ' << '\n';
+//         std::cout << "min ask: " << minAsk->price << ' ' << '\n';
+//         std::cout << '\n';
+//     }
+// }
+
 void LimitOrderBook::display()
 {
-    std::size_t len = std::max(bidSide.size(), askSide.size());
-    std::size_t dashes{ 75 };
+    std::vector<const Order*> flatBids;
+
+    for (auto& [price, orders] : bids)
+    {
+        for (const auto& o : orders)
+        {
+            flatBids.push_back(&o);
+        }
+    }
+
+    std::vector<const Order*> flatAsks;
+
+    for (auto& [price, orders] : asks)
+    {
+        for (const auto& o : orders)
+        {
+            flatAsks.push_back(&o);
+        }
+    }
+
+    std::size_t len = std::max(flatBids.size(), flatAsks.size());
+    std::size_t dashes{ 73 };
 
     std::cout << "\033[2J\033[1;1H";
 
@@ -142,32 +225,32 @@ void LimitOrderBook::display()
 
     for (std::size_t i{ 0 }; i < len; ++i)
     {
-        if (i < bidSide.size())
+        if (i < flatBids.size())
         {
-            std::cout << std::left << std::setw(8)
-                      << bidSide[i].orderID;
-            std::cout << "\033[32m" << std::right << std::fixed
-                      << std::setprecision(4) << std::setw(15)
-                      << bidSide[i].price / 10000.0 << "\033[0m";
-            std::cout << "    " << +bidSide[i].initialQuantity
-                      << "    " << +bidSide[i].remainingQuantity;
+            const auto* b = flatBids[i];
+
+            std::cout << std::left << std::setw(8) << b->orderID;
+            std::cout << "\033[32m" << std::right << std::fixed << std::setprecision(4)
+                      << std::setw(14) << b->price / 10000.0 << "\033[0m";
+            std::cout << std::setw(5) << +b->initialQuantity
+                      << std::setw(5) << +b->remainingQuantity;
         }
         else
         {
-            std::cout << std::setw(33) << ' ';
+            std::cout << std::setw(32) << ' ';
         }
 
         std::cout << "    |    ";
 
-        if (i < askSide.size())
+        if (i < flatAsks.size())
         {
-            std::cout << std::left << std::setw(8)
-                      << askSide[i].orderID;
-            std::cout << "\033[31m" << std::right << std::fixed
-                      << std::setprecision(4) << std::setw(15)
-                      << askSide[i].price / 10000.0 << "\033[0m";
-            std::cout << "    " << +askSide[i].initialQuantity
-                      << "    " << +askSide[i].remainingQuantity;
+            const auto* a = flatAsks[i];
+
+            std::cout << std::left << std::setw(8) << a->orderID;
+            std::cout << "\033[31m" << std::right << std::fixed << std::setprecision(4)
+                      << std::setw(14) << a->price / 10000.0 << "\033[0m";
+            std::cout << std::setw(5) << +a->initialQuantity
+                      << std::setw(5) << +a->remainingQuantity;
         }
 
         std::cout << '\n';
@@ -182,9 +265,8 @@ void LimitOrderBook::display()
 
     if (maxBid && minAsk)
     {
-        std::cout << '\n';
-        std::cout << "max bid: " << maxBid->price << ' ' << '\n';
-        std::cout << "min ask: " << minAsk->price << ' ' << '\n';
-        std::cout << '\n';
+        std::cout << "best bid: " << std::fixed << std::setprecision(4) << maxBid->price / 10000.0
+                  << " | best ask: " << minAsk->price / 10000.0
+                  << " | spread: " << (minAsk->price - maxBid->price) / 10000.0 << "\n";
     }
 }
