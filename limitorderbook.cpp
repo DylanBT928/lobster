@@ -70,58 +70,60 @@ void LimitOrderBook::placeOrder(Order& o)
 
 void LimitOrderBook::cancelOrder(std::uint32_t oid)
 {
-    for (const Order& : o)
+    auto mapIt = orderIDs.find(oid);
+
+    if (mapIt == orderIDs.end())
     {
-        if (o.orderID == oid)
+        return;
+    }
+
+    auto listIt = mapIt->second;
+    std::uint64_t price = listIt->price;
+
+    if (listIt->side == Side::BUY)
+    {
+        bids[price].erase(listIt);
+
+        if (bids[price].empty())
         {
-            bids.erase(bids.begin() + i);
-            break;
+            bids.erase(price);
+        }
+    }
+    else
+    {
+        asks[price].erase(listIt);
+
+        if (asks[price].empty())
+        {
+            asks.erase(price);
         }
     }
 
-    for (std::size_t i{ 0 }; i < askSide.size(); ++i)
-    {
-        if (askSide[i].orderID == oid)
-        {
-            askSide.erase(askSide.begin() + i);
-            break;
-        }
-    }
+    orderIDs.erase(mapIt);
 }
 
 void LimitOrderBook::executeTrade()
 {
-    for (std::size_t i{ 0 }; i < bidSide.size(); ++i)
-    {
-        if (bidSide[i].orderID == maxBid->orderID)
-        {
-            bidSide.erase(bidSide.begin() + i);
-            break;
-        }
-    }
+    // for (std::size_t i{ 0 }; i < bidSide.size(); ++i)
+    // {
+    //     if (bidSide[i].orderID == maxBid->orderID)
+    //     {
+    //         bidSide.erase(bidSide.begin() + i);
+    //         break;
+    //     }
+    // }
+    //
+    // for (std::size_t i{ 0 }; i < askSide.size(); ++i)
+    // {
+    //     if (askSide[i].orderID == minAsk->orderID)
+    //     {
+    //         askSide.erase(askSide.begin() + i);
+    //         break;
+    //     }
+    // }
 
-    for (std::size_t i{ 0 }; i < askSide.size(); ++i)
-    {
-        if (askSide[i].orderID == minAsk->orderID)
-        {
-            askSide.erase(askSide.begin() + i);
-            break;
-        }
-    }
-
-    sort(bidSide.begin(), bidSide.end(),
-         [](const Order& a, const Order& b)
-         {
-             return a.price > b.price;
-         });
-    sort(askSide.begin(), askSide.end(),
-         [](const Order& a, const Order& b)
-         {
-             return a.price < b.price;
-         });
-
-    maxBid = &bidSide[0];
-    minAsk = &askSide[0];
+    // maxBid = &bidSide[0];
+    // minAsk = &askSide[0];
 }
 
 void LimitOrderBook::display()
