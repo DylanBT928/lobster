@@ -20,8 +20,6 @@ struct Order
     std::uint8_t initialQuantity;
     std::uint8_t remainingQuantity;
     Side side;
-    Order* prev;
-    Order* next;
 };
 
 class LimitOrderBook
@@ -37,8 +35,8 @@ class LimitOrderBook
 
    private:
     std::unordered_map<std::uint32_t, std::list<Order>::iterator> orderIDs;
-    std::map<std::uint64_t, std::list<Order>> bids;
-    std::map<std::uint64_t, std::list<Order>, std::greater<std::uint64_t>> asks;
+    std::map<std::uint64_t, std::list<Order>, std::greater<std::uint64_t>> bids;
+    std::map<std::uint64_t, std::list<Order>> asks;
     Order* maxBid;
     Order* minAsk;
 };
