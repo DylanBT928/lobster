@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <iostream>
 #include <iterator>
+#include <vector>
 
 Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
     : orderID(oid),
