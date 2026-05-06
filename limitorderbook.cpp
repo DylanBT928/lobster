@@ -133,6 +133,7 @@ void LimitOrderBook::display()
 
     std::size_t len = std::max(flatBids.size(), flatAsks.size());
     std::size_t dashes{ 73 };
+    std::size_t height{ 20 };
 
     std::cout << "\033[2J\033[1;1H";
 
@@ -174,6 +175,16 @@ void LimitOrderBook::display()
         }
 
         std::cout << '\n';
+
+        if (--height <= 0)
+        {
+            break;
+        }
+    }
+
+    for (std::size_t i{ 0 }; i < height; ++i)
+    {
+        std::cout << std::setw(32) << ' ' << "    |    \n";
     }
 
     for (std::size_t i{ 0 }; i < dashes; ++i)
@@ -183,10 +194,36 @@ void LimitOrderBook::display()
 
     std::cout << '\n';
 
+    std::cout << "best bid: ";
+
+    if (maxBid)
+    {
+        std::cout << std::fixed << std::setprecision(4) << maxBid->price / 10000.0;
+    }
+    else
+    {
+        std::cout << "n/a";
+    }
+
+    std::cout << " | best ask: ";
+
+    if (minAsk)
+    {
+        std::cout << std::fixed << std::setprecision(4) << minAsk->price / 10000.0;
+    }
+    else
+    {
+        std::cout << "n/a";
+    }
+
+    std::cout << " | spread: ";
+
     if (maxBid && minAsk)
     {
-        std::cout << "best bid: " << std::fixed << std::setprecision(4) << maxBid->price / 10000.0
-                  << " | best ask: " << minAsk->price / 10000.0
-                  << " | spread: " << (minAsk->price - maxBid->price) / 10000.0 << "\n";
+        std::cout << (minAsk->price - maxBid->price) / 10000.0 << "\n";
+    }
+    else
+    {
+        std::cout << "n/a\n";
     }
 }
