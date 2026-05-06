@@ -25,9 +25,6 @@ struct Order
 class LimitOrderBook
 {
    public:
-    LimitOrderBook();
-    ~LimitOrderBook();
-
     void placeOrder(Order& o);
     void cancelOrder(std::uint32_t oid);
     void executeTrade();

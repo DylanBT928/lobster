@@ -17,17 +17,6 @@ Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
 {
 }
 
-LimitOrderBook::LimitOrderBook()
-    : maxBid{ nullptr }, minAsk{ nullptr }
-{
-}
-
-LimitOrderBook::~LimitOrderBook()
-{
-    maxBid = nullptr;
-    minAsk = nullptr;
-}
-
 void LimitOrderBook::placeOrder(Order& o)
 {
     if (o.side == Side::BUY)
