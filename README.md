@@ -2,6 +2,8 @@
 
 Lobster is a Limit Order Book (LOB) and matching engine written in C++17. It simulates a financial exchange by maintaining price-time priority for buy and sell orders, executing trades when prices cross, and providing a real-time visualization of the order book in the terminal.
 
+![Lobster Demo](demo.gif)
+
 
 ## Architecture
 
