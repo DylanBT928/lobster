@@ -21,7 +21,7 @@ int main()
     std::uniform_int_distribution<std::uint8_t> quantity(1, 9);
     std::uniform_int_distribution<> buyOrSell(0, 1);
 
-    std::list<Order> orders;
+    std::list<const Order*> orders;
 
     for (std::uint32_t oid{ 1 }; oid <= 500; ++oid)
     {

@@ -17,7 +17,7 @@ Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
 {
 }
 
-void LimitOrderBook::placeOrder(Order& o)
+void LimitOrderBook::placeOrder(const Order& o)
 {
     if (o.side == Side::BUY)
     {
@@ -109,7 +109,7 @@ void LimitOrderBook::executeTrade()
     }
 }
 
-void LimitOrderBook::display()
+void LimitOrderBook::display() const
 {
     std::vector<const Order*> flatBids;
 

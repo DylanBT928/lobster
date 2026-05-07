@@ -25,10 +25,10 @@ struct Order
 class LimitOrderBook
 {
    public:
-    void placeOrder(Order& o);
+    void placeOrder(const Order& o);
     void cancelOrder(std::uint32_t oid);
     void executeTrade();
-    void display();
+    void display() const;
 
    private:
     std::unordered_map<std::uint32_t, std::list<Order>::iterator> orderIDs;
