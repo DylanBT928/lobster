@@ -1,7 +1,6 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
 #include <random>
 #include <thread>
 
