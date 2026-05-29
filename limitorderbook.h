@@ -6,12 +6,25 @@
 #include <map>
 #include <unordered_map>
 
+/*
+ *  enum Side - Represents the side of the market
+ *  @BUY: Indicates a bid order
+ *  @ASK: Indicates an ask order
+ */
 enum class Side
 {
     BUY,
     SELL
 };
 
+/*
+ *  struct Order - Represents a single limit order
+ *  @orderID:           Unique identifier of the order
+ *  @price:             Limit price for execution
+ *  @initialQuantity:   Starting volume of the order
+ *  @remainingQuantity: Remaining unfilled volume of the order
+ *  @side:              Market side (BUY or SELL)
+ */
 struct Order
 {
     Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s);
@@ -22,6 +35,17 @@ struct Order
     Side side;
 };
 
+/*
+ *  class LimitOrderBook - Core matching engine structure
+ *  @orderIDs: Hashmap for O(1) order lookups and cancellations
+ *  @bids:     Buy orders sorted by descending price (highest bid first)
+ *  @asks:     Sell orders sorted by ascending price (lowest ask first)
+ *  @maxBid:   Pointer to the current highest bid order
+ *  @maxAsk:   Pointer to the current lowest ask order
+ *
+ *  Maintains the state of all open bids and asks, including an interface to
+ *  place, cancel, and execute trades based on price-time priority.
+ */
 class LimitOrderBook
 {
    public:
@@ -38,4 +62,4 @@ class LimitOrderBook
     Order* minAsk;
 };
 
-#endif
+#endif /* LIMITORDERBOOK_H */
