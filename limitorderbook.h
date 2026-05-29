@@ -6,7 +6,7 @@
 #include <map>
 #include <unordered_map>
 
-/*
+/**
  *  enum Side - Represents the side of the market
  *  @BUY: Indicates a bid order
  *  @ASK: Indicates an ask order
@@ -17,13 +17,13 @@ enum class Side
     SELL
 };
 
-/*
+/**
  *  struct Order - Represents a single limit order
  *  @orderID:           Unique identifier of the order
  *  @price:             Limit price for execution
  *  @initialQuantity:   Starting volume of the order
  *  @remainingQuantity: Remaining unfilled volume of the order
- *  @side:              Market side (BUY or SELL)
+ *  @side:              Market side (BUY / SELL)
  */
 struct Order
 {
@@ -35,7 +35,7 @@ struct Order
     Side side;
 };
 
-/*
+/**
  *  class LimitOrderBook - Core matching engine structure
  *  @orderIDs: Hashmap for O(1) order lookups and cancellations
  *  @bids:     Buy orders sorted by descending price (highest bid first)
