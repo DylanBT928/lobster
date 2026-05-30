@@ -8,6 +8,13 @@
 #include <iterator>
 #include <vector>
 
+/**
+ *  Order::Order - Constructor for a new order
+ *  @oid: Order ID
+ *  @p:   Price
+ *  @iq:  Initial quantity
+ *  @s:   Side (BUY / SELL)
+ */
 Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
     : orderID(oid),
       price{ p },
@@ -17,6 +24,17 @@ Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
 {
 }
 
+/**
+ *  LimitOrderBook::placeOrder - Inserts a new order and triggers matching
+ *  @o: Order to place
+ *
+ *  Routes the order to the appropriate hashmap (bids or asks) based on
+ *  its side, updates the orderID hashmap for O(1) lookups, and updates
+ *  the maxBid / minAsk pointers.
+ *
+ *  Continuously loops and calls LimitOrderBook::executeTrade() as long as
+ *  the spread is crossed (maxBid >= minAsk).
+ */
 void LimitOrderBook::placeOrder(const Order& o)
 {
     if (o.side == Side::BUY)
@@ -56,6 +74,14 @@ void LimitOrderBook::placeOrder(const Order& o)
     }
 }
 
+/**
+ *  LimitOrderBook::cancelOrder - Removes an order from the order book
+ *  @oid: Order ID of the order to cancel
+ *
+ *  Uses the orderIDs hashmap to locate the iterator and removes it from
+ *  the corresponding bid / ask list, cleaning up empty price levels if
+ *  necessary.
+ */
 void LimitOrderBook::cancelOrder(std::uint32_t oid)
 {
     auto mapIt = orderIDs.find(oid);
@@ -90,6 +116,14 @@ void LimitOrderBook::cancelOrder(std::uint32_t oid)
     orderIDs.erase(mapIt);
 }
 
+/**
+ *  LimitOrderBook::executeTrade - Matches currently crossed orders
+ *
+ *  Matches the best bid and best ask. Calculates the maximum fill volume,
+ *  decrements the remaining quantities, and automatically removes fully
+ *  depleted orders via LimitOrderBook::cancelOrder(). Assumes prices are
+ *  already crossed.
+ */
 void LimitOrderBook::executeTrade()
 {
     std::uint8_t fillQuantity = std::min(maxBid->remainingQuantity,
@@ -109,6 +143,13 @@ void LimitOrderBook::executeTrade()
     }
 }
 
+/**
+ *  LimitOrderBook::display - Prints the current state of the order book
+ *
+ *  Outputs the aggregated levels of asks and bids to stdout, alongside
+ *  the best bid, best ask, and current spread. Includes ANSI color codes
+ *  for visual distinction.
+ */
 void LimitOrderBook::display() const
 {
     std::vector<const Order*> flatBids;
