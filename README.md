@@ -34,7 +34,7 @@ Lobster is a Limit Order Book (LOB) and matching engine written in C++17. It sim
 ## Build and Run
 
 ```sh
-g++ -o lobster main.cpp limitorderbook.cpp -std=c++17 -Wall -Wextra -Wpedantic -O3
+g++ -std=c++17 -O3 -Wall -Wextra -Wpedantic -Iinclude src/main.cpp src/limitorderbook.cpp -o lobster
 ./lobster
 ```
 
