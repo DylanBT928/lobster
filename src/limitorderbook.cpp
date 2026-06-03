@@ -16,7 +16,7 @@
  *  @s:   Side (BUY / SELL)
  */
 Order::Order(std::uint32_t oid, std::uint64_t p, std::uint8_t iq, Side s)
-    : orderID(oid),
+    : orderID{ oid },
       price{ p },
       initialQuantity{ iq },
       remainingQuantity{ iq },
