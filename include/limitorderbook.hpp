@@ -49,6 +49,14 @@ struct Order
 class LimitOrderBook
 {
    public:
+    LimitOrderBook() = default;
+
+    LimitOrderBook(const LimitOrderBook&) = delete;
+    LimitOrderBook(const LimitOrderBook&&) = delete;
+
+    LimitOrderBook& operator=(LimitOrderBook&) = delete;
+    LimitOrderBook& operator=(LimitOrderBook&&) = delete;
+
     void placeOrder(const Order& o);
     void cancelOrder(std::uint32_t oid);
     void executeTrade();
