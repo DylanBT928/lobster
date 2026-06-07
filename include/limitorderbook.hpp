@@ -50,6 +50,7 @@ class LimitOrderBook
 {
    public:
     LimitOrderBook() = default;
+    ~LimitOrderBook() = default;
 
     LimitOrderBook(const LimitOrderBook&) = delete;
     LimitOrderBook(const LimitOrderBook&&) = delete;
