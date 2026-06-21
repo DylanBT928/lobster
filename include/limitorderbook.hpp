@@ -53,9 +53,9 @@ class LimitOrderBook
     ~LimitOrderBook() = default;
 
     LimitOrderBook(const LimitOrderBook&) = delete;
-    LimitOrderBook(const LimitOrderBook&&) = delete;
+    LimitOrderBook(LimitOrderBook&&) = delete;
 
-    LimitOrderBook& operator=(LimitOrderBook&) = delete;
+    LimitOrderBook& operator=(const LimitOrderBook&) = delete;
     LimitOrderBook& operator=(LimitOrderBook&&) = delete;
 
     void placeOrder(const Order& o);
